@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import "@/styles/main.css";
 import Layout from '../components/Layout';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion';
@@ -88,7 +89,7 @@ export default function Home() {
           <div className="w-full md:w-1/2 mt-8 md:mt-0">
             <div className="flex items-center gap-4 justify-center mt-4">
               <h1 className="text-3xl sm:text-5xl text-center font-bold leading-tight">
-                Hello World! <br /> I'm D. Gopala Krishna
+                Hello World! <br /> I&#39;m D. Gopala Krishna
               </h1>
 
               <motion.div
@@ -136,13 +137,13 @@ export default function Home() {
         >
           <h2>About Me</h2>
           <p>Welcome to my corner of the digital universe!</p>
-          <p>I'm thrilled you've dropped by for a visit.</p>
+          <p>I&#39;m thrilled you&#39;ve dropped by for a visit.</p>
           <p>
-            I managed to snag a bachelor's degree in Computer Science and
+            I managed to snag a bachelor&#39;s degree in Computer Science and
             Engineering. You know, the modern-day wizardry stuff.
           </p>
           <p>
-            By day, I'm a Junior Backend Developer at MATDUN Labs crafting
+            By day, I&#39;m a Junior Backend Developer at MATDUN Labs crafting
             real-world solutions with code and caffeine. By night, I build
             personal and academic AI projects blending tech and creativity.
           </p>

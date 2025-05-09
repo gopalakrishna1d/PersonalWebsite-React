@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
+import "@/styles/main.css";
 import { motion } from 'framer-motion';
 import ScrollProgress from './ScrollProgress';
 import { useEffect, useState } from "react";
