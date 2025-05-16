@@ -8,7 +8,7 @@ import aiAnimation from "../../public/ai.json";
 
 const Lottie = dynamic(() => import('lottie-react').then(mod => mod.default), {
   ssr: false,
-  loading: () => <div>Loading animation...</div>,
+  loading: () => <div></div>,
 });
 
 function useWindowWidth() {
@@ -33,13 +33,18 @@ export default function Home() {
   const isDesktop = width >= 768;
   const animation = useMemo(() => aiAnimation, []);
   const lottieRef = useRef(null);
-  
+
+  // Canvas ripple effect
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     const hero = heroRef.current;
 
     if (!canvas || !ctx || !hero) return
+    
+    let animationFrameId;
+    let ripples = [];
+    let lastTime = 0;
 
     const resizeCanvas = () => {
       canvas.width = hero.clientWidth;
@@ -47,10 +52,6 @@ export default function Home() {
     };
     resizeCanvas();
     window.addEventListener('resize', resizeCanvas);
-  
-    let ripples = [];
-    let lastTime = 0;
-    let animationFrameId;
 
     const handleMouseMove = (e) => {
       const now = Date.now();
@@ -64,6 +65,7 @@ export default function Home() {
     };
   
     const draw = () => {
+      if (!ctx || !canvas) return;
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ripples = ripples.filter(r => r.radius < 1000);
   
@@ -95,9 +97,23 @@ export default function Home() {
       window.removeEventListener('resize', resizeCanvas);
       hero.removeEventListener('mousemove', handleMouseMove);
       cancelAnimationFrame(animationFrameId);
+      ripples = [];
     };
   }, []);
-  
+
+  // Lottie cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (lottieRef.current) {
+        try {
+          lottieRef.current.destroy();
+        } catch (err) {
+          console.error("Lottie destroy failed", err);
+        }
+      }
+    };
+  }, []);
+
 
   return (
     <>
@@ -113,7 +129,7 @@ export default function Home() {
               display: 'flex',
               flexDirection: isDesktop ? 'row' : 'column',
               justifyContent: isDesktop ? 'space-between' : 'center',
-              alignItems: isDesktop ? 'center' : 'center',
+              alignItems: 'center',
               width: '100%',
               height: '100%',
               position: 'relative',
@@ -145,11 +161,11 @@ export default function Home() {
             <div style={{ width: '500px', height: '500px' }}>
               <Lottie
                 lottieRef={lottieRef}
-                animationData={aiAnimation}
+                animationData={animation}
                 loop
                 autoplay
                 style={{ width: '100%', height: '100%' }}
-              />            
+              />
             </div>
             
             <div>
