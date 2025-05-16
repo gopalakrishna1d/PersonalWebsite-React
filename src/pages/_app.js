@@ -22,12 +22,12 @@ export default function App({ Component, pageProps }) {
         }}
       />
         <motion.header
-          className="fixed top-0 w-full z-50"
+          className="fixed top-0 w-full z-50 bg-white border-b border-gray-200"
           initial={{ y: -80, opacity: 0 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          <nav
+          <nav className="flex flex-wrap gap-6 md:gap-10 font-medium px-6 py-4 overflow-hidden"
             style={{
               width: '100%',
               backgroundColor: '#fff',
@@ -38,14 +38,50 @@ export default function App({ Component, pageProps }) {
               fontWeight: 500,
             }}
           >
-            <Link href="/" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>Home</Link>
-            <Link href="/projects" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>Projects</Link>
-            <Link href="/skills" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>Skills</Link>
-            <Link href="/experience" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>Experience</Link>
-            <Link href="/hobbies" style={{ marginRight: '1.5rem', textDecoration: 'none' }}>Hobbies</Link>
+            <Link href="/" style={{
+              marginRight: '1.5rem',
+              textDecoration: 'none',
+              color: 'black',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
+            onMouseLeave={(e) => (e.target.style.color = 'black')}
+              >Home</Link>
+            <Link href="/projects" style={{
+              marginRight: '1.5rem',
+              textDecoration: 'none',
+              color: 'black',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
+            onMouseLeave={(e) => (e.target.style.color = 'black')}
+              >Projects</Link>
+            <Link href="/skills" style={{
+              marginRight: '1.5rem',
+              textDecoration: 'none',
+              color: 'black',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
+            onMouseLeave={(e) => (e.target.style.color = 'black')}
+              >Skills</Link>
+            <Link href="/experience" style={{
+              marginRight: '1.5rem',
+              textDecoration: 'none',
+              color: 'black',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
+            onMouseLeave={(e) => (e.target.style.color = 'black')}
+              >Experience</Link>
+            <Link href="/hobbies" style={{
+              marginRight: '1.5rem',
+              textDecoration: 'none',
+              color: 'black',
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
+            onMouseLeave={(e) => (e.target.style.color = 'black')}
+              >Hobbies</Link>
           </nav>
         </motion.header>
 
+      <div className="h-[72px]" />
 
       <Component {...pageProps} />
 
