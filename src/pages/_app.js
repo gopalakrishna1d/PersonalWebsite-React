@@ -38,45 +38,45 @@ export default function App({ Component, pageProps }) {
               fontWeight: 500,
             }}
           >
-            <Link href="/" style={{
+            <Link href="https://gopala-krishna-dangala.vercel.app/" style={{
               marginRight: '1.5rem',
               textDecoration: 'none',
-              color: 'black',
+              color: '#0070f3',
             }}
-            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
-            onMouseLeave={(e) => (e.target.style.color = 'black')}
+            onMouseEnter={(e) => (e.target.style.color = 'blue')}
+            onMouseLeave={(e) => (e.target.style.color ='#0070f3')}
               >Home</Link>
             <Link href="/projects" style={{
               marginRight: '1.5rem',
               textDecoration: 'none',
-              color: 'black',
+              color: '#0070f3',
             }}
-            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
-            onMouseLeave={(e) => (e.target.style.color = 'black')}
+            onMouseEnter={(e) => (e.target.style.color = 'blue')}
+            onMouseLeave={(e) => (e.target.style.color = '#0070f3')}
               >Projects</Link>
             <Link href="/skills" style={{
               marginRight: '1.5rem',
               textDecoration: 'none',
-              color: 'black',
+              color: '#0070f3',
             }}
-            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
-            onMouseLeave={(e) => (e.target.style.color = 'black')}
+            onMouseEnter={(e) => (e.target.style.color = 'blue')}
+            onMouseLeave={(e) => (e.target.style.color = '#0070f3')}
               >Skills</Link>
             <Link href="/experience" style={{
               marginRight: '1.5rem',
               textDecoration: 'none',
-              color: 'black',
+              color: '#0070f3',
             }}
-            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
-            onMouseLeave={(e) => (e.target.style.color = 'black')}
+            onMouseEnter={(e) => (e.target.style.color = 'blue')}
+            onMouseLeave={(e) => (e.target.style.color = '#0070f3')}
               >Experience</Link>
             <Link href="/hobbies" style={{
               marginRight: '1.5rem',
               textDecoration: 'none',
-              color: 'black',
+              color: '#0070f3',
             }}
-            onMouseEnter={(e) => (e.target.style.color = '#0070f3')}
-            onMouseLeave={(e) => (e.target.style.color = 'black')}
+            onMouseEnter={(e) => (e.target.style.color = 'blue')}
+            onMouseLeave={(e) => (e.target.style.color = '#0070f3')}
               >Hobbies</Link>
           </nav>
         </motion.header>

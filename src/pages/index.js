@@ -1,11 +1,15 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { useEffect, useRef, useState } from 'react';
-import { useScroll, motion } from 'framer-motion';
+import { useEffect, useRef, useState, useMemo } from 'react';
+import { motion } from 'framer-motion';
 import dynamic from 'next/dynamic';
 
 import aiAnimation from "../../public/ai.json";
 
+const Lottie = dynamic(() => import('lottie-react').then(mod => mod.default), {
+  ssr: false,
+  loading: () => <div>Loading animation...</div>,
+});
 
 function useWindowWidth() {
   const [width, setWidth] = useState(
@@ -23,12 +27,12 @@ function useWindowWidth() {
 
 
 export default function Home() {
-  const Lottie = dynamic(() => import('lottie-react').then(mod => mod.default), { ssr: false });
   const heroRef = useRef(null);
   const canvasRef = useRef(null);
   const width = useWindowWidth();
   const isDesktop = width >= 768;
-  const lastScrollY = useRef(0);
+  const animation = useMemo(() => aiAnimation, []);
+  const lottieRef = useRef(null);
   
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -46,6 +50,7 @@ export default function Home() {
   
     let ripples = [];
     let lastTime = 0;
+    let animationFrameId;
 
     const handleMouseMove = (e) => {
       const now = Date.now();
@@ -80,7 +85,7 @@ export default function Home() {
         ctx.fill();
       });
   
-      requestAnimationFrame(draw);
+      animationFrameId = requestAnimationFrame(draw);
     };
   
     draw();
@@ -89,6 +94,7 @@ export default function Home() {
     return () => {
       window.removeEventListener('resize', resizeCanvas);
       hero.removeEventListener('mousemove', handleMouseMove);
+      cancelAnimationFrame(animationFrameId);
     };
   }, []);
   
@@ -136,13 +142,18 @@ export default function Home() {
               height: '100%',
             }}
           />
-            <div className="w-full md:w-1/2 flex justify-center">
-              <Lottie animationData={aiAnimation} loop={true} style={{ width: "100%", maxWidth:"1000px" }} />
+            <div style={{ width: '500px', height: '500px' }}>
+              <Lottie
+                lottieRef={lottieRef}
+                animationData={aiAnimation}
+                loop
+                autoplay
+                style={{ width: '100%', height: '100%' }}
+              />            
             </div>
-            <div className="w-full md:w-1/2 mt-8 md:mt-0">
-              <div className="flex items-center gap-4 justify-center mt-4">
-              <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Hello World!<br />I&#39;m D. Gopala Krishna</h1>
-              </div>
+            
+            <div>
+              <div> <h1 style={{ fontSize: '3rem', marginBottom: '1rem' }}>Hello World!<br />I&#39;m D. Gopala Krishna</h1></div>
                 <p style={{ fontSize: '1.25rem' }}>Software Developer | AI Enthusiast | Problem Solver</p>
             </div>
           </motion.section>
