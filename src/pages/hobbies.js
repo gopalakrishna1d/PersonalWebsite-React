@@ -1,22 +1,15 @@
 // pages/hobbies.js
 import Head from 'next/head';
 import Link from 'next/link';
+import { useScroll, motion } from 'framer-motion';
 
 export default function Hobbies() {
   return (
     <>
       <Head>
-        <title>Hobbies | Gopala Krishna</title>
+        <title>Gopala Krishna | Portfolio</title>
+        <meta name="description" content="Personal portfolio of Gopala Krishna" />
       </Head>
-      <header className="header">
-        <nav>
-          <Link href="/">Home</Link>
-          <Link href="/projects">Projects</Link>
-          <Link href="/skills">Skills</Link>
-          <Link href="/experience">Experience</Link>
-          <Link href="/hobbies">Hobbies</Link>
-        </nav>
-      </header>
 
       <main className="main">
         <section className="about">

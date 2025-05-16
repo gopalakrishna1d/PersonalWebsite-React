@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+const nextConfig = {
   output: 'export',
-  basePath: '/PersonalWebsite-React', // <-- Replace with your repo name
   trailingSlash: true,
+  images: {
+    unoptimized: true,
+  },
 };
+
+export default nextConfig;
