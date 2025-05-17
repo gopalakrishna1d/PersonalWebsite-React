@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }) {
             fontWeight: 500,
           }}
         >
-          {['Home', 'Projects', 'Skills', 'Career Timeline', 'Hobbies'].map((label) => (
+          {['Home', 'Projects', 'Skills', 'Career Timeline', 'Hobbies', 'Contact Me'].map((label) => (
             <Link
               key={label}
               href={`/${label.toLowerCase() === 'home' ? '' : label.toLowerCase().replace(/\s/g, '-')}`}

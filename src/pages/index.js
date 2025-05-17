@@ -1,15 +1,12 @@
 import Head from 'next/head';
-import Link from 'next/link';
-import { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
 
+import CanvasRipple from '../components/CanvasRipple';
+import LottiePlayer from '../components/LottiePlayer';
+import HighlightCard from '../components/HighlightsCard';
 import aiAnimation from "../../public/ai.json";
 
-const Lottie = dynamic(() => import('lottie-react').then(mod => mod.default), {
-  ssr: false,
-  loading: () => <div></div>,
-});
 
 function useWindowWidth() {
   const [width, setWidth] = useState(
@@ -28,98 +25,20 @@ function useWindowWidth() {
 
 export default function Home() {
   const heroRef = useRef(null);
-  const canvasRef = useRef(null);
   const width = useWindowWidth();
   const isDesktop = width >= 768;
-  const animation = useMemo(() => aiAnimation, []);
-  const lottieRef = useRef(null);
 
-  // Canvas ripple effect
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext('2d');
-    const hero = heroRef.current;
+  const MemoizedLottie = useMemo(() => (
+    <LottiePlayer animationData={aiAnimation} style={{ width: '100%', height: '100%' }} />
+  ), []);
 
-    if (!canvas || !ctx || !hero) return
-    
-    let animationFrameId;
-    let ripples = [];
-    let lastTime = 0;
-
-    const resizeCanvas = () => {
-      canvas.width = hero.clientWidth;
-      canvas.height = hero.clientHeight;
-    };
-    resizeCanvas();
-    window.addEventListener('resize', resizeCanvas);
-
-    const handleMouseMove = (e) => {
-      const now = Date.now();
-      if (now - lastTime < 30) return;
-      lastTime = now;
-
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      ripples.push({ x, y, radius: 0, alpha: 0.5 });
-    };
   
-    const draw = () => {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ripples = ripples.filter(r => r.radius < 1000);
-  
-      ripples.forEach(r => {
-        r.radius += 3;
-        r.alpha -= 0.01;
-  
-        const gradient = ctx.createRadialGradient(
-          r.x, r.y, r.radius * 0.8,
-          r.x, r.y, r.radius
-        );
-        gradient.addColorStop(0, `rgba(255, 255, 255, 0)`);
-        gradient.addColorStop(0.5, `rgba(255, 255, 255, ${r.alpha * 0.1})`);
-        gradient.addColorStop(1, `rgba(255, 255, 255, 0)`);
-  
-        ctx.beginPath();
-        ctx.fillStyle = gradient;
-        ctx.arc(r.x, r.y, r.radius, 0, Math.PI * 2);
-        ctx.fill();
-      });
-  
-      animationFrameId = requestAnimationFrame(draw);
-    };
-  
-    draw();
-    hero.addEventListener('mousemove', handleMouseMove);
-  
-    return () => {
-      window.removeEventListener('resize', resizeCanvas);
-      hero.removeEventListener('mousemove', handleMouseMove);
-      cancelAnimationFrame(animationFrameId);
-      ripples = [];
-    };
-  }, []);
-
-  // Lottie cleanup on unmount
-  useEffect(() => {
-    return () => {
-      if (lottieRef.current) {
-        try {
-          lottieRef.current.destroy();
-        } catch (err) {
-          console.error("Lottie destroy failed", err);
-        }
-      }
-    };
-  }, []);
-
-
   return (
     <>
       <Head>
         <title>Gopala Krishna | Portfolio</title>
         <meta name="description" content="Personal portfolio of Gopala Krishna" />
+        <link rel="preload" href="/ai.json" as="fetch" crossOrigin="anonymous" />
       </Head>
 
         <section style={{ padding: 0, margin: 0, height: '100vh', display: 'flex', alignItems: 'center'  }}>
@@ -146,26 +65,10 @@ export default function Home() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
-          <canvas
-            ref={canvasRef}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              pointerEvents: 'none',
-              zIndex: 0,
-              width: '100%',
-              height: '100%',
-            }}
-          />
+          <CanvasRipple containerRef={heroRef} />
+
             <div style={{ width: '500px', height: '500px' }}>
-              <Lottie
-                lottieRef={lottieRef}
-                animationData={animation}
-                loop
-                autoplay
-                style={{ width: '100%', height: '100%' }}
-              />
+              {MemoizedLottie}
             </div>
             
             <div>
@@ -189,7 +92,7 @@ export default function Home() {
               justifyContent: 'space-around',
               margin: '2rem 0',
               padding: '1rem',
-              backgroundColor: '#fafafa',
+              backgroundColor: 'white',
               borderRadius: '8px',
               textAlign: 'center',
               flexWrap: 'wrap',
@@ -246,92 +149,27 @@ export default function Home() {
           </motion.section>
 
           {/* Highlights */}
-          <section style={{
-            display: 'flex',
-            gap: '1rem',
-            flexWrap: 'wrap',
-            marginTop: '2rem',
-          }}>
-            <Link href="/projects" style={{
-              color: 'black',
-              textDecoration: 'none',
-              flex: 1,
-              minWidth: '250px',
-            }}>
-              <motion.div
-                style={{
-                  border: '1px solid #eaeaea',
-                  borderRadius: '8px',
-                  padding: '1.5rem',
-                  backgroundColor: '#fff',
-                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.03)',
-                  transition: 'transform 0.3s ease, box-shadow 0.2s ease-in-out',
-                  cursor: 'pointer',
-                }}
-                whileHover={{ y: -8, boxShadow: '0 8px 20px rgba(0,0,0,0.12)' }}
-                transition={{ type: 'spring', stiffness: 200 }}
-              >
-                <h2 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>💼 Projects</h2>
-                <p style={{ fontSize: '1rem', marginBottom: 0 }}>
-                  Worked on AI-based services at Matdun Labs, built a Solo
-                  Leveling-inspired personal tracker app, and more.
-                </p>
-              </motion.div>
-            </Link>
-
-            <Link href="/skills" style={{
-              color: 'black',
-              textDecoration: 'none',
-              flex: 1,
-              minWidth: '250px',
-            }}>
-              <motion.div
-                style={{
-                  border: '1px solid #eaeaea',
-                  borderRadius: '8px',
-                  padding: '1.5rem',
-                  backgroundColor: '#fff',
-                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.03)',
-                  transition: 'transform 0.3s ease, box-shadow 0.2s ease-in-out',
-                  cursor: 'pointer',
-                }}
-                whileHover={{ y: -8, boxShadow: '0 8px 20px rgba(0,0,0,0.12)' }}
-                transition={{ type: 'spring', stiffness: 200 }}
-              >
-                <h2 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>🧠 Skills</h2>
-                <p style={{ fontSize: '1rem', marginBottom: 0 }}>
-                  Python, Django, React, PostgreSQL, REST APIs, Git, and full-stack
-                  development practices.
-                </p>
-              </motion.div>
-            </Link>
-
-            <Link href="/hobbies" style={{
-              color: 'black',
-              textDecoration: 'none',
-              flex: 1,
-              minWidth: '250px',
-            }}>
-              <motion.div
-                style={{
-                  border: '1px solid #eaeaea',
-                  borderRadius: '8px',
-                  padding: '1.5rem',
-                  backgroundColor: '#fff',
-                  boxShadow: '0 2px 5px rgba(0, 0, 0, 0.03)',
-                  transition: 'transform 0.3s ease, box-shadow 0.2s ease-in-out',
-                  cursor: 'pointer',
-                }}
-                whileHover={{ y: -8, boxShadow: '0 8px 20px rgba(0,0,0,0.12)' }}
-                transition={{ type: 'spring', stiffness: 200 }}
-              >
-                <h2 style={{ fontSize: '1.4rem', marginBottom: '0.5rem' }}>🎸 Personal</h2>
-                <p style={{ fontSize: '1rem', marginBottom: 0 }}>
-                  I love traveling, playing guitar, and diving into anime and comics.
-                  Volunteered at Comic-Con twice!
-                </p>
-              </motion.div>
-            </Link>
+          <section style={{ marginTop: '2rem' }}>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <HighlightCard
+                href="/projects"
+                title="Projects"
+                emoji="💼"
+                description="Worked on AI-based services at Matdun Labs, built a Solo Leveling-inspired personal tracker app, and more."
+              />
+              <HighlightCard
+                href="/skills"
+                title="Skills"
+                emoji="🧠"
+                description="Python, Django, React, PostgreSQL, REST APIs, Git, and full-stack development practices."
+              />
+              <HighlightCard
+                href="/hobbies"
+                title="Personal"
+                emoji="🎸"
+                description="I love traveling, playing guitar, and diving into anime and comics. Volunteered at Comic-Con twice!"
+              />
+            </div>
           </section>
         </main>
     </>
